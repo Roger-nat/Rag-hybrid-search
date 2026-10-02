@@ -1,0 +1,13 @@
+# Lower bounds = versions the test-suite was run against (Oct 2026), except
+# sentence-transformers which is only exercised inside Docker / real runs.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+pydantic-settings>=2.2
+chromadb>=1.0
+sentence-transformers>=3.0
+pypdf>=5.0
+python-docx>=1.1
+anthropic>=0.40
+streamlit>=1.50
+requests>=2.31

@@ -1,0 +1,34 @@
+services:
+  api:
+    build: .
+    image: rag-hybrid-search:latest
+    env_file: .env
+    environment:
+      DATA_DIR: /data
+    ports:
+      - "8000:8000"
+    volumes:
+      - rag_data:/data      # Chroma database survives restarts
+      - hf_cache:/models    # Hugging Face models are downloaded once
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  ui:
+    build: .
+    image: rag-hybrid-search:latest
+    command: ["streamlit", "run", "ui/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+    environment:
+      API_URL: http://api:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  rag_data:
+  hf_cache:
